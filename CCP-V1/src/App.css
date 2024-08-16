@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+@layer base {
+  @font-face {
+    font-family: "BDO Grotesk";
+    src: url("/src/assets/fonts/BDOGrotesk-VF.ttf");
+  }
+}
+
+@layer components {
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 500;
+  }
+  h3 {
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+  h4 {
+    font-size: 1.4rem;
+    font-weight: 400;
+  }
+  h5 {
+    font-size: 1.26rem;
+    font-weight: 400;
+  }
+  h6 {
+    font-size: 1.125rem;
+  }
+  p {
+    font-size: 1rem;
+  }
+
+  [data-theme="default"] .btn {
+    border-radius: 0.5rem;
+  }
+}
+
+.titlebar {
+  height: 0;
+}
