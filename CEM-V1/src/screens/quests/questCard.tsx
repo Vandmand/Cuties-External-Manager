@@ -32,27 +32,45 @@ enum QuestStatus {
 
 export default function QuestCard(props: QuestItemInterface) {
   const localeDb = useContext(LocaleDbContext);
-  const pmcQuests = useContext(PmcDataContext).Quests;
+  const pmcData = useContext(PmcDataContext);
+  const pmcTaskConditions = pmcData.TaskConditionCounters;
+  const pmcQuests = pmcData.Quests;
 
   const pmcQuestItem = pmcQuests.find((quest) => quest.qid === props.quest._id);
 
   const renderConditions = (questConditions: IQuestConditionTypes) => {
     const questFinishConditions = questConditions.AvailableForFinish.map(
       (condition) => {
+        const pmcTaskCondition = pmcTaskConditions[condition.id];
+        const currentProgress = pmcTaskCondition?.value ?? 0;
+        const targetProgress = (condition.value as number) ?? 1;
+
+        const linkElement = condition.target ? (
+          <Link
+            className="font-bold btn btn-circle btn-ghost btn-sm"
+            to={"../item/" + condition.target}
+          >
+            <img src={linkIcon} alt="" />
+          </Link>
+        ) : null;
+
         return (
           <div className=" flex flex-col">
-            <p className="flex items-center gap-2">
-              {localeDb[condition.id]}
-              {condition.target ? (
-                <Link
-                  className="font-bold btn btn-circle btn-ghost btn-sm"
-                  to={"../item/" + condition.target}
-                >
-                  <img src={linkIcon} alt="" />
-                </Link>
-              ) : null}
-            </p>
-            <progress className="progress" value={0} max={condition.value} />
+            <div className="flex items-center">
+              <p className="flex flex-grow items-center gap-2">
+                {localeDb[condition.id]}
+                {linkElement}
+              </p>
+              <p className="flex-grow-0">{`${Math.min(
+                currentProgress,
+                targetProgress
+              )}/${targetProgress}`}</p>
+            </div>
+            <progress
+              className="progress"
+              value={currentProgress}
+              max={targetProgress}
+            />
           </div>
         );
       }
@@ -66,12 +84,12 @@ export default function QuestCard(props: QuestItemInterface) {
   const cardTitle = props.quest.QuestName ?? "";
 
   return (
-    <div className="card bg-base-100 w-4/5">
+    <div className="card bg-base-100 shadow w-full">
       <div className="card-body gap-8">
         <div className="card-title">{cardTitle}</div>
         <div className="flex items-center gap-4">
           <div className="flex flex-grow gap-2 justify-center">
-            <img src={traderIcon} alt="" />{" "}
+            <img src={traderIcon} />{" "}
             {localeDb[props.quest.traderId + " Nickname"]}
           </div>
           <div className="flex flex-grow gap-2 justify-center">
