@@ -3,7 +3,7 @@ import {
   LocaleDbContext,
 } from "@/contextWrapper/contextWrapper";
 import Card from "@/dummyComponents/card";
-import { getItem } from "@/serverWrapper/serverWrapper";
+import { getItem } from "@/data/serverWrapper";
 import {
   ITemplateItem,
   Props,

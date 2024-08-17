@@ -1,6 +1,6 @@
 import { AppConfigContext } from "@/contextWrapper/contextWrapper";
 import useCache from "@/hooks/useCache";
-import { getPmcProfileIds } from "@/serverWrapper/serverWrapper";
+import { getPmcIds } from "@/data/apiWrapper";
 import { AppConfig } from "@/types/config/appConfig";
 import { useContext, useEffect, useState } from "react";
 
@@ -15,7 +15,7 @@ export default function Settings(props: {
   >("profileList", []);
 
   useEffect(() => {
-    getPmcProfileIds().then((profiles) => setAllProfiles(profiles));
+    getPmcIds().then((profiles) => setAllProfiles(profiles));
   }, []);
 
   const renderThemeOptions = () => {

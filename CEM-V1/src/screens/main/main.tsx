@@ -5,28 +5,10 @@ import { useState, useEffect } from "react";
 import { IPmcData } from "@/types/models/eft/common/IPmcData";
 import { IQuest } from "@/types/models/eft/common/tables/IQuest";
 import { AppConfig } from "@/types/config/appConfig";
-import { appConfigDir } from "@tauri-apps/api/path";
-import { fs } from "@tauri-apps/api";
 import Loading from "@/screens/loading/loading";
-import {
-  getFleaPrices,
-  getLocaleDb,
-  getPmcProfile,
-  getQuests,
-} from "@/serverWrapper/serverWrapper";
+import { getFleaPrices } from "@/data/serverWrapper";
+import { getLocalDb, getProfile, getQuests } from "@/data/apiWrapper";
 import useCache from "@/hooks/useCache";
-
-const readLocaleDb = async (): Promise<Record<string, string>> => {
-  const filePath = (await appConfigDir()) + "localeDb.json";
-
-  if (await fs.exists(filePath)) {
-    return JSON.parse(await fs.readTextFile(filePath));
-  }
-
-  const localeDb = await getLocaleDb();
-  fs.writeTextFile(filePath, JSON.stringify(localeDb));
-  return localeDb;
-};
 
 //TODO abstract to separate file
 interface ServerData {
@@ -47,14 +29,6 @@ const isServerDataFailed = (serverData: ServerData) => {
   );
 };
 
-const getServerDataCache = (): ServerData | null => {
-  const serverDataCache = localStorage.getItem("serverData");
-
-  if (!serverDataCache) return null;
-
-  return JSON.parse(serverDataCache);
-};
-
 export default function Main(props: {
   appConfig: AppConfig;
   onSettingChange: (s: AppConfig) => void;
@@ -70,9 +44,9 @@ export default function Main(props: {
     // TODO Implement ready check
 
     const serverData = Promise.all([
-      getPmcProfile(props.appConfig.profile.id),
+      getProfile(props.appConfig.profile.id),
       getQuests(),
-      readLocaleDb(),
+      getLocalDb(),
       getFleaPrices(),
     ]);
 

@@ -8,25 +8,34 @@ import settingIcons from "@/assets/icons/settings_icon.svg";
 
 export default function SideBar() {
   return (
-    <div className="flex flex-col border-2 border-base-300 rounded-lg p-2 items-center gap-8 shadow-sm w-fit">
-      <h1>Tabs</h1>
+    <div className="flex flex-col border-2 border-base-300 rounded-lg p-2 items-center gap-8 shadow-sm min-w-fit">
+      <div className="">tabs</div>
       <div className="flex flex-col gap-4 items-center justify-center flex-1">
-        <Link className="btn w-full flex items-center gap-2" to={"quests"}>
+        <Link
+          className="btn shadow-none w-full flex items-center gap-2"
+          to={"quests"}
+        >
           <img src={questIcon} alt="" />{" "}
           <p className="flex-grow text-left">Quests</p>
         </Link>
         <Spacer.Horizontal />
-        <Link className="btn w-full flex items-center gap-2" to={"hideout"}>
+        <Link
+          className="btn shadow-none w-full flex items-center gap-2"
+          to={"hideout"}
+        >
           <img src={hideoutIcon} alt="" />{" "}
           <p className="flex-grow text-left">Hideout</p>
         </Link>
         <Spacer.Horizontal />
-        <Link className="btn w-full flex items-center" to={"items"}>
+        <Link className="btn shadow-none w-full flex items-center" to={"items"}>
           <img src={itemIcon} alt="" />{" "}
           <p className="flex-grow text-left">Items</p>
         </Link>
         <Spacer.Horizontal />
-        <Link className="btn w-full flex items-center" to={"inventory"}>
+        <Link
+          className="btn shadow-none w-full flex items-center"
+          to={"inventory"}
+        >
           <img src={inventoryIcon} alt="" />{" "}
           <p className="flex-grow text-left">Inventory</p>
         </Link>

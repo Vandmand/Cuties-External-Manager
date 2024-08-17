@@ -24,7 +24,9 @@ export default function Quests() {
       <QuestFilter
         onFilterFunctionChange={(func) => setQuestFilter(() => func)}
       />
-      <ul className="flex flex-col gap-8 w-full">{renderQuests()}</ul>
+      <ul className="flex flex-col gap-8 w-full items-center">
+        {renderQuests()}
+      </ul>
     </div>
   );
 }

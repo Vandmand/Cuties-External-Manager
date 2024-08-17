@@ -1,4 +1,4 @@
-import { getItems } from "@/serverWrapper/serverWrapper";
+import { getItems } from "@/data/serverWrapper";
 import { useContext, useEffect } from "react";
 import { LocaleDbContext } from "@/contextWrapper/contextWrapper";
 import { Link, useParams } from "react-router-dom";

@@ -1,4 +1,4 @@
-import { getPing } from "@/serverWrapper/serverWrapper";
+import { getPing } from "@/data/serverWrapper";
 import Settings from "@/settings/settings";
 import { AppConfig } from "@/types/config/appConfig";
 import { useEffect, useState } from "react";

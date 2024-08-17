@@ -24,27 +24,26 @@ export function isError(response: any) {
   return response.Error;
 }
 
-export async function getReady(): Promise<boolean> {
-  return (await fetch(getEndpoint() + "/ccp/ready")).json();
+async function fetchEndpoint(endpoint: string, ...params: [string, string][]) {
+  const urlParams =
+    "?" + params.map((param) => param[0] + "=" + param[1]).join();
+
+  const response = await fetch(getEndpoint() + endpoint + urlParams);
+
+  return response.json();
 }
 
-export async function getQuests(): Promise<IQuest[]> {
-  return (await fetch(getEndpoint() + "/ccp/quests")).json();
-}
+export const fetchQuests = async (): Promise<IQuest[]> =>
+  fetchEndpoint("/ccp/quests", ["test", "test1"]);
 
-export async function getLocaleDb(): Promise<Record<string, string>> {
-  return (await fetch(getEndpoint() + "/ccp/localeDb")).json();
-}
+export const fetchLocaleDb = async (): Promise<Record<string, string>> =>
+  fetchEndpoint("/ccp/localeDb");
 
-export async function getPmcProfileIds(): Promise<
-  [{ id: string; name: string }]
-> {
-  return (await fetch(getEndpoint() + "/ccp/profile/ids")).json();
-}
+export const fetchPmcIds = async (): Promise<[{ id: string; name: string }]> =>
+  fetchEndpoint("/ccp/profile/ids");
 
-export async function getPmcProfile(id: string): Promise<IPmcData> {
-  return (await fetch(getEndpoint() + "/ccp/profile?id=" + id)).json();
-}
+export const fetchProfile = (id: string): Promise<IPmcData> =>
+  fetchEndpoint("/ccp/profile", ["id", id]);
 
 export async function getFleaPrices(): Promise<Record<string, string>> {
   return (await fetch(getEndpoint() + "/ccp/flea")).json();

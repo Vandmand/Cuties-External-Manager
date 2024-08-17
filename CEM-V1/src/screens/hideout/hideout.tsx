@@ -2,7 +2,7 @@ import { IHideout } from "@/types/models/spt/hideout/IHideout";
 import HideoutCard from "./hideoutCard";
 import useCache from "@/hooks/useCache";
 import { useEffect } from "react";
-import { getHideout } from "@/serverWrapper/serverWrapper";
+import { getHideout } from "@/data/serverWrapper";
 
 export default function Hideout() {
   const [hideout, setHideout] = useCache("Hideout", {} as IHideout);

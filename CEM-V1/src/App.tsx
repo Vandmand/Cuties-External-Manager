@@ -15,7 +15,7 @@ import { Theme } from "react-daisyui";
 import FleaMarket from "./screens/fleaMarket/fleaMarket";
 import Item from "./screens/items/item";
 import Items from "./screens/items/items";
-import { getAppConfig, saveAppConfig } from "./config/config";
+import { getAppConfig, saveAppConfig } from "./data/config";
 import useCache from "./hooks/useCache";
 import Inventory from "./screens/inventory/inventory";
 
