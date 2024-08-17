@@ -40,17 +40,20 @@ export default function QuestCard(props: QuestItemInterface) {
     const questFinishConditions = questConditions.AvailableForFinish.map(
       (condition) => {
         return (
-          <p className="flex items-center gap-2">
-            {localeDb[condition.id]}
-            {condition.target ? (
-              <Link
-                className="font-bold btn btn-circle btn-ghost btn-sm"
-                to={"../item/" + condition.target}
-              >
-                <img src={linkIcon} alt="" />
-              </Link>
-            ) : null}
-          </p>
+          <div className=" flex flex-col">
+            <p className="flex items-center gap-2">
+              {localeDb[condition.id]}
+              {condition.target ? (
+                <Link
+                  className="font-bold btn btn-circle btn-ghost btn-sm"
+                  to={"../item/" + condition.target}
+                >
+                  <img src={linkIcon} alt="" />
+                </Link>
+              ) : null}
+            </p>
+            <progress className="progress" value={0} max={condition.value} />
+          </div>
         );
       }
     );
@@ -61,10 +64,6 @@ export default function QuestCard(props: QuestItemInterface) {
   };
 
   const cardTitle = props.quest.QuestName ?? "";
-  const cardLocation =
-    props.quest.location == "any"
-      ? props.quest.location
-      : localeDb[props.quest.location + " Name"];
 
   return (
     <div className="card bg-base-100 w-4/5">
