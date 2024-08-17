@@ -38,9 +38,14 @@ export default function HideoutCard(props: { area: IHideoutArea }) {
   };
 
   return (
-    <Card title={name} alt={`Level: ${pmcHideoutArea.level}`}>
-      <h5>Next upgrade:</h5>
-      <div className="flex flex-col">{renderUpgradeCosts()}</div>
-    </Card>
+    <div className="card bg-base-100 shadow">
+      <div className="card-body">
+        <div className="card-title flex">
+          <h3>{name}</h3>
+        </div>
+        <h5>Next upgrade:</h5>
+        <div className="flex flex-col">{renderUpgradeCosts()}</div>
+      </div>
+    </div>
   );
 }

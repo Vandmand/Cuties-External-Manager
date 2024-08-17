@@ -86,7 +86,9 @@ export default function QuestCard(props: QuestItemInterface) {
   return (
     <div className="card bg-base-100 shadow w-full">
       <div className="card-body gap-8">
-        <div className="card-title">{cardTitle}</div>
+        <div className="card-title">
+          <h1>{cardTitle}</h1>
+        </div>
         <div className="flex items-center gap-4">
           <div className="flex flex-grow gap-2 justify-center">
             <img src={traderIcon} />{" "}
