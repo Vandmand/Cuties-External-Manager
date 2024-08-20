@@ -45,27 +45,27 @@ class Mod implements IPreSptLoadMod {
       (sessionId) => (this.sessionID = sessionId)
     );
 
-    registerEndpoint(httpListenerService, "getQuests", "/ccp/quests", () => {
+    registerEndpoint(httpListenerService, "getQuests", "/cem/quests", () => {
       return getQuests(questHelper, profileHelper, questConfig, this.sessionID);
     });
 
-    registerEndpoint(httpListenerService, "flea", "/ccp/flea", () => {
+    registerEndpoint(httpListenerService, "flea", "/cem/flea", () => {
       return ragfairPriceService.getAllFleaPrices();
     });
 
-    registerEndpoint(httpListenerService, "localeDbFull", "/ccp/localeDb", () =>
+    registerEndpoint(httpListenerService, "localeDbFull", "/cem/localeDb", () =>
       localeService.getLocaleDb()
     );
 
-    registerEndpoint(httpListenerService, "hideout", "/ccp/hideout", () =>
+    registerEndpoint(httpListenerService, "hideout", "/cem/hideout", () =>
       databaseService.getHideout()
     );
 
-    registerEndpoint(httpListenerService, "allItems", "/ccp/items", () =>
+    registerEndpoint(httpListenerService, "allItems", "/cem/items", () =>
       itemHelper.getItems().map((item) => item._id)
     );
 
-    registerEndpoint(httpListenerService, "item", "/ccp/item", (_, req) => {
+    registerEndpoint(httpListenerService, "item", "/cem/item", (_, req) => {
       const { id } = getUrlParameters(req.url);
       const item = itemHelper.getItem(id);
       if (!item[0]) return null;
@@ -75,7 +75,7 @@ class Mod implements IPreSptLoadMod {
     registerEndpoint(
       httpListenerService,
       "profiles",
-      "/ccp/profile/ids",
+      "/cem/profile/ids",
       () => {
         const profiles = profileHelper.getProfiles();
         const profileIds = [];
@@ -98,7 +98,7 @@ class Mod implements IPreSptLoadMod {
     registerEndpoint(
       httpListenerService,
       "getProfile",
-      "/ccp/profile",
+      "/cem/profile",
       (_, req) => {
         const { id } = getUrlParameters(req.url);
 
@@ -106,7 +106,7 @@ class Mod implements IPreSptLoadMod {
       }
     );
 
-    registerEndpoint(httpListenerService, "ping", "/ccp/ping", () => "pong");
+    registerEndpoint(httpListenerService, "ping", "/cem/ping", () => "pong");
   }
 }
 
