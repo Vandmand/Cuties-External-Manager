@@ -2,7 +2,7 @@ import {
   LocaleDbContext,
   PmcDataContext,
 } from "@/contextWrapper/contextWrapper";
-import Card from "@/dummyComponents/card";
+import { itemList } from "@/helpers/itemQuery";
 import { HideoutArea } from "@/types/models/eft/common/tables/IBotBase";
 import { IHideoutArea } from "@/types/models/eft/hideout/IHideoutArea";
 import { useContext } from "react";
@@ -24,12 +24,18 @@ export default function HideoutCard(props: { area: IHideoutArea }) {
     const currentStageComponents = currentStage.requirements.map((req) => {
       if (req.type !== "Item") return null;
 
+      const itemMatch =
+        itemList(pmcData.Inventory.items)[req.templateId ?? ""] ?? 0;
+
       const itemName = localeDb[(req.templateId as string) + " Name"];
 
       return (
-        <div className="flex items-center gap-2">
-          <p> - {req.count}</p>
-          <p>{itemName}</p>
+        <div className="flex flex-col">
+          <div className="flex items-center">
+            <p>{itemName}</p>
+            <p className="flex-grow-0">{`${itemMatch}/${req.count}`}</p>
+          </div>
+          <progress className="progress" value={itemMatch} max={req.count} />
         </div>
       );
     });
@@ -44,7 +50,7 @@ export default function HideoutCard(props: { area: IHideoutArea }) {
           <h3>{name}</h3>
         </div>
         <h5>Next upgrade:</h5>
-        <div className="flex flex-col">{renderUpgradeCosts()}</div>
+        <div className="flex flex-col gap-4">{renderUpgradeCosts()}</div>
       </div>
     </div>
   );

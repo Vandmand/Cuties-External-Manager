@@ -1,15 +1,10 @@
-import {
-  LocaleDbContext,
-  PmcDataContext,
-} from "@/contextWrapper/contextWrapper";
-import { Item } from "@/types/models/eft/common/tables/IItem";
+import { PmcDataContext } from "@/contextWrapper/contextWrapper";
 import { arrayToTree } from "performant-array-to-tree";
 import { useContext } from "react";
 import RootItem from "./rootItem";
 import LeafItem from "./leafItem";
 import ParentItem from "./parentItem";
-
-export type TreeType = { data: Item; children: TreeType[] };
+import { TreeType } from "@/helpers/itemQuery";
 
 export default function Inventory() {
   const pmcData = useContext(PmcDataContext);
