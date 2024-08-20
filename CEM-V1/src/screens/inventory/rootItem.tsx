@@ -1,6 +1,6 @@
 import { LocaleDbContext } from "@/contextWrapper/contextWrapper";
 import { ReactNode, useContext } from "react";
-import { TreeType } from "./inventory";
+import { TreeType } from "@/helpers/itemQuery";
 
 export default function RootItem(props: {
   item: TreeType;

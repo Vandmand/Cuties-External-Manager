@@ -1,6 +1,6 @@
 import { LocaleDbContext } from "@/contextWrapper/contextWrapper";
 import { useContext } from "react";
-import { TreeType } from "./inventory";
+import { TreeType } from "@/helpers/itemQuery";
 import { Link } from "react-router-dom";
 
 export default function LeafItem(props: { item: TreeType; depth: number }) {

@@ -1,7 +1,7 @@
 import SideBar from "@/sidebar/sideBar";
 import { Outlet, useLocation } from "react-router-dom";
 import ContextWrapper from "@/contextWrapper/contextWrapper";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { IPmcData } from "@/types/models/eft/common/IPmcData";
 import { IQuest } from "@/types/models/eft/common/tables/IQuest";
 import { AppConfig } from "@/types/config/appConfig";
@@ -33,7 +33,6 @@ export default function Main(props: {
   appConfig: AppConfig;
   onSettingChange: (s: AppConfig) => void;
 }) {
-  const [connected, setConnected] = useState<boolean | null>(null);
   const [serverData, setServerData] = useCache<ServerData>(
     "serverData",
     {} as ServerData
