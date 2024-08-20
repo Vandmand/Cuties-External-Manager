@@ -1,4 +1,3 @@
-import { SerializableError } from "@/types/custom/SerializableError";
 import { IPmcData } from "@/types/models/eft/common/IPmcData";
 import { IQuest } from "@/types/models/eft/common/tables/IQuest";
 import { ITemplateItem } from "@/types/models/eft/common/tables/ITemplateItem";
@@ -34,36 +33,36 @@ async function fetchEndpoint(endpoint: string, ...params: [string, string][]) {
 }
 
 export const fetchQuests = async (): Promise<IQuest[]> =>
-  fetchEndpoint("/ccp/quests", ["test", "test1"]);
+  fetchEndpoint("/cem/quests", ["test", "test1"]);
 
 export const fetchLocaleDb = async (): Promise<Record<string, string>> =>
-  fetchEndpoint("/ccp/localeDb");
+  fetchEndpoint("/cem/localeDb");
 
 export const fetchPmcIds = async (): Promise<[{ id: string; name: string }]> =>
-  fetchEndpoint("/ccp/profile/ids");
+  fetchEndpoint("/cem/profile/ids");
 
 export const fetchProfile = (id: string): Promise<IPmcData> =>
-  fetchEndpoint("/ccp/profile", ["id", id]);
+  fetchEndpoint("/cem/profile", ["id", id]);
 
 export async function getFleaPrices(): Promise<Record<string, string>> {
-  return (await fetch(getEndpoint() + "/ccp/flea")).json();
+  return (await fetch(getEndpoint() + "/cem/flea")).json();
 }
 
 export async function getItems(): Promise<string[]> {
-  return (await fetch(getEndpoint() + "/ccp/items")).json();
+  return (await fetch(getEndpoint() + "/cem/items")).json();
 }
 
 export async function getItem(id: string): Promise<ITemplateItem> {
-  return (await fetch(getEndpoint() + "/ccp/item?id=" + id)).json();
+  return (await fetch(getEndpoint() + "/cem/item?id=" + id)).json();
 }
 
 export async function getHideout(): Promise<IHideout> {
-  return (await fetch(getEndpoint() + "/ccp/hideout")).json();
+  return (await fetch(getEndpoint() + "/cem/hideout")).json();
 }
 
 export async function getPing(): Promise<Response> {
   try {
-    return await fetch(getEndpoint() + "/ccp/ping", {
+    return await fetch(getEndpoint() + "/cem/ping", {
       signal: AbortSignal.timeout(10000),
     });
   } catch (error) {
