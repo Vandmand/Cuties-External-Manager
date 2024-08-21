@@ -1,46 +1,49 @@
 import "./App.css";
 import { useEffect } from "react";
+import React from "react";
 import TitleBar from "./titlebar/titlebar";
 import {
   createBrowserRouter,
   Navigate,
+  redirect,
   RouterProvider,
 } from "react-router-dom";
 import Main from "./screens/main/main";
 import Quests from "./screens/quests/quests";
 import Hideout from "./screens/hideout/hideout";
-import { AppConfig } from "./types/config/appConfig";
 import Settings from "./settings/settings";
 import { Theme } from "react-daisyui";
 import FleaMarket from "./screens/fleaMarket/fleaMarket";
 import Item from "./screens/items/item";
 import Items from "./screens/items/items";
-import { getAppConfig, saveAppConfig } from "./data/config";
-import useCache from "./hooks/useCache";
+import { getAppConfig } from "./data/config";
 import Inventory from "./screens/inventory/inventory";
+import { RecoilRoot } from "recoil";
 
 function App() {
-  const [appConfig, setAppConfig] = useCache("appConfig", {} as AppConfig);
-
-  useEffect(() => {
-    getAppConfig().then((config) => setAppConfig(config));
-  }, []);
-
-  const handleSettingChange = async (settings: AppConfig) => {
-    await saveAppConfig(settings);
-    setAppConfig(settings);
-    window.location.reload();
-  };
-
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <Main
-          appConfig={appConfig}
-          onSettingChange={(s) => handleSettingChange(s)}
-        />
-      ),
+      element: <Main />,
+      loader: async () => {
+        const appConfig = await getAppConfig();
+
+        try {
+          const fetchData = await Promise.all([]);
+
+          const fetchDataObject = Object.fromEntries([
+            ["profile", fetchData[0]],
+            ["quests", fetchData[1]],
+            ["localeDb", fetchData[2]],
+            ["fleaPrices", fetchData[3]],
+          ]);
+
+          return Object.assign({}, fetchDataObject, { appConfig: appConfig });
+        } catch (_) {
+          redirect("settings");
+          return null;
+        }
+      },
       children: [
         {
           path: "quests",
@@ -84,19 +87,23 @@ function App() {
       path: "*",
       element: <Navigate to={"../"} />,
     },
+    {
+      path: "settings",
+      element: <Settings onSettingChange={() => ""} />,
+    },
   ]);
 
   return (
-    <Theme dataTheme={appConfig.theme}>
-      <div className="p-2 flex flex-col gap-2 border-4 border-base-300 bg-base-200 shadow-inner h-screen overflow-hidden">
-        <TitleBar />
-        {Object.keys(appConfig).length === 0 ? (
-          <></>
-        ) : (
-          <RouterProvider router={router} />
-        )}
-      </div>
-    </Theme>
+    <RecoilRoot>
+      <Theme dataTheme={appConfig.theme}>
+        <div className="p-2 flex flex-col gap-2 border-4 border-base-300 bg-base-200 shadow-inner h-screen overflow-hidden">
+          <TitleBar />
+          <React.Suspense fallback={<p>loading</p>}>
+            <RouterProvider router={router} />
+          </React.Suspense>
+        </div>
+      </Theme>
+    </RecoilRoot>
   );
 }
 
