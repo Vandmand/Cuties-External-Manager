@@ -1,11 +1,13 @@
-import { LocaleDbContext } from "@/contextWrapper/contextWrapper";
-import { useContext } from "react";
 import { TreeType } from "@/helpers/itemQuery";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getLocaleDb } from "@/queries";
 
 export default function LeafItem(props: { item: TreeType; depth: number }) {
-  const localeDb = useContext(LocaleDbContext);
+  const { data: localeDb } = useQuery(getLocaleDb());
   const stackCount = props.item.data.upd?.StackObjectsCount;
+
+  if (!localeDb) return;
 
   return (
     <div className="p-4 flex gap-2 items-center">

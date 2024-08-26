@@ -1,15 +1,19 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { IQuest } from "@/types/models/eft/common/tables/IQuest";
 import QuestCard from "./questCard";
-import { QuestDataContext } from "@/contextWrapper/contextWrapper";
 import QuestFilter from "./questFilter";
+import { useQuery } from "@tanstack/react-query";
+import { getQuests } from "@/queries";
+import PageSkeleton from "@/dummyComponents/pageSkeleton";
 
 export default function Quests() {
-  const quests = useContext(QuestDataContext);
+  const { data: quests } = useQuery(getQuests());
 
-  const [questFilter, setQuestFilter] = useState(() => (quests: IQuest[]) => {
-    return quests;
-  });
+  const [questFilter, setQuestFilter] = useState(
+    () => (quests: IQuest[]) => quests
+  );
+
+  if (!quests) return <PageSkeleton />;
 
   const renderQuests = () => {
     const questsQuery = questFilter(quests);

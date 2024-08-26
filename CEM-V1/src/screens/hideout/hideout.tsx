@@ -1,19 +1,13 @@
 import { IHideout } from "@/types/models/spt/hideout/IHideout";
 import HideoutCard from "./hideoutCard";
-import useCache from "@/hooks/useCache";
-import { useEffect } from "react";
-import { getHideout } from "@/data/serverWrapper";
+import { useQuery } from "@tanstack/react-query";
+import { getHideout } from "@/queries";
+import PageSkeleton from "@/dummyComponents/pageSkeleton";
 
 export default function Hideout() {
-  const [hideout, setHideout] = useCache("Hideout", {} as IHideout);
+  const { data: hideout } = useQuery(getHideout());
 
-  useEffect(() => {
-    getHideout().then((hideout) => {
-      setHideout(hideout);
-    });
-  }, []);
-
-  if (Object.keys(hideout).length === 0) return <p>Dummy loading</p>;
+  if (!hideout) return <PageSkeleton />;
 
   const renderHideout = (hideout: IHideout) => {
     return hideout.areas.map((area) => {

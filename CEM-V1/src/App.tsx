@@ -1,11 +1,8 @@
 import "./App.css";
-import { useEffect } from "react";
-import React from "react";
 import TitleBar from "./titlebar/titlebar";
 import {
   createBrowserRouter,
   Navigate,
-  redirect,
   RouterProvider,
 } from "react-router-dom";
 import Main from "./screens/main/main";
@@ -13,37 +10,19 @@ import Quests from "./screens/quests/quests";
 import Hideout from "./screens/hideout/hideout";
 import Settings from "./settings/settings";
 import { Theme } from "react-daisyui";
-import FleaMarket from "./screens/fleaMarket/fleaMarket";
 import Item from "./screens/items/item";
 import Items from "./screens/items/items";
-import { getAppConfig } from "./data/config";
 import Inventory from "./screens/inventory/inventory";
-import { RecoilRoot } from "recoil";
+import { useQuery } from "@tanstack/react-query";
+import { getAppConfigQuery } from "./queries";
 
 function App() {
+  const { data: appConfig } = useQuery(getAppConfigQuery());
+
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Main />,
-      loader: async () => {
-        const appConfig = await getAppConfig();
-
-        try {
-          const fetchData = await Promise.all([]);
-
-          const fetchDataObject = Object.fromEntries([
-            ["profile", fetchData[0]],
-            ["quests", fetchData[1]],
-            ["localeDb", fetchData[2]],
-            ["fleaPrices", fetchData[3]],
-          ]);
-
-          return Object.assign({}, fetchDataObject, { appConfig: appConfig });
-        } catch (_) {
-          redirect("settings");
-          return null;
-        }
-      },
       children: [
         {
           path: "quests",
@@ -55,15 +34,7 @@ function App() {
         },
         {
           path: "settings",
-          element: (
-            <Settings
-              onSettingChange={(settings) => handleSettingChange(settings)}
-            />
-          ),
-        },
-        {
-          path: "flea",
-          element: <FleaMarket />,
+          element: <Settings />,
         },
         {
           path: "inventory",
@@ -89,21 +60,17 @@ function App() {
     },
     {
       path: "settings",
-      element: <Settings onSettingChange={() => ""} />,
+      element: <Settings />,
     },
   ]);
 
   return (
-    <RecoilRoot>
-      <Theme dataTheme={appConfig.theme}>
-        <div className="p-2 flex flex-col gap-2 border-4 border-base-300 bg-base-200 shadow-inner h-screen overflow-hidden">
-          <TitleBar />
-          <React.Suspense fallback={<p>loading</p>}>
-            <RouterProvider router={router} />
-          </React.Suspense>
-        </div>
-      </Theme>
-    </RecoilRoot>
+    <Theme dataTheme={appConfig?.theme ?? "carbon"}>
+      <div className="p-2 flex flex-col gap-2 border-4 border-base-300 bg-base-200 shadow-inner h-screen overflow-hidden">
+        <TitleBar />
+        <RouterProvider router={router} />
+      </div>
+    </Theme>
   );
 }
 

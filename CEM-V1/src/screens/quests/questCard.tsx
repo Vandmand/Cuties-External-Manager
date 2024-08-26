@@ -1,7 +1,3 @@
-import {
-  LocaleDbContext,
-  PmcDataContext,
-} from "@/contextWrapper/contextWrapper";
 import { convertToWikiLink } from "@/helpers/links";
 import {
   IQuest,
@@ -12,6 +8,8 @@ import { Link } from "react-router-dom";
 import locationIcon from "@/assets/icons/location_icon.svg";
 import traderIcon from "@/assets/icons/trader_icon.svg";
 import linkIcon from "@/assets/icons/link_icon.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getAppConfigQuery, getLocaleDb, getProfile } from "@/queries";
 interface QuestItemInterface extends HTMLProps<HTMLDivElement> {
   quest: IQuest;
 }
@@ -31,10 +29,14 @@ enum QuestStatus {
 }
 
 export default function QuestCard(props: QuestItemInterface) {
-  const localeDb = useContext(LocaleDbContext);
-  const pmcData = useContext(PmcDataContext);
-  const pmcTaskConditions = pmcData.TaskConditionCounters;
-  const pmcQuests = pmcData.Quests;
+  const { data: localeDb } = useQuery(getLocaleDb());
+  const { data: appConfig } = useQuery(getAppConfigQuery());
+  const { data: profile } = useQuery(getProfile(appConfig?.profile?.id ?? ""));
+
+  if (!profile || !localeDb) return;
+
+  const pmcTaskConditions = profile.TaskConditionCounters;
+  const pmcQuests = profile.Quests;
 
   const pmcQuestItem = pmcQuests.find((quest) => quest.qid === props.quest._id);
 
@@ -87,7 +89,7 @@ export default function QuestCard(props: QuestItemInterface) {
     <div className="card bg-base-100 shadow w-full">
       <div className="card-body gap-8">
         <div className="card-title">
-          <h1>{cardTitle}</h1>
+          <h2>{cardTitle}</h2>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex flex-grow gap-2 justify-center">

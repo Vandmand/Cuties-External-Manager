@@ -1,21 +1,12 @@
 import { AppConfig } from "@/types/config/appConfig";
 import { appConfigDir } from "@tauri-apps/api/path";
 import { fs } from "@tauri-apps/api";
-import { getPmcIds } from "./apiWrapper";
 
 export const getAppConfig = async (): Promise<AppConfig> => {
-  let profiles: AppConfig["profile"][];
-
-  try {
-    profiles = await getPmcIds();
-  } catch (error) {
-    profiles = [{ id: "none", name: "none" }];
-  }
-
   const defaultConfig: AppConfig = {
     ip: "127.0.0.1",
     port: 6969,
-    profile: profiles[0],
+    profile: undefined,
     theme: "default",
   };
 
