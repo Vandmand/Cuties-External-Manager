@@ -3,7 +3,6 @@ import { getAppConfigQuery, getLocaleDb, getProfile } from "@/queries";
 import { HideoutArea } from "@/types/models/eft/common/tables/IBotBase";
 import { IHideoutArea } from "@/types/models/eft/hideout/IHideoutArea";
 import { useQuery } from "@tanstack/react-query";
-import { useContext } from "react";
 
 export default function HideoutCard(props: { area: IHideoutArea }) {
   const { data: localeDb } = useQuery(getLocaleDb());

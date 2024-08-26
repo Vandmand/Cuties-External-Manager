@@ -1,8 +1,4 @@
-import {
-  getAppConfigMutation,
-  getAppConfigQuery,
-  getProfileIds,
-} from "@/queries";
+import { getAppConfigMutation, getAppConfigQuery } from "@/queries";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 

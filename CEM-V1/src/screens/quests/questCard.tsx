@@ -3,7 +3,7 @@ import {
   IQuest,
   IQuestConditionTypes,
 } from "@/types/models/eft/common/tables/IQuest";
-import { HTMLProps, useContext } from "react";
+import { HTMLProps } from "react";
 import { Link } from "react-router-dom";
 import locationIcon from "@/assets/icons/location_icon.svg";
 import traderIcon from "@/assets/icons/trader_icon.svg";

@@ -1,5 +1,4 @@
 import { arrayToTree } from "performant-array-to-tree";
-import { useContext } from "react";
 import RootItem from "./rootItem";
 import LeafItem from "./leafItem";
 import ParentItem from "./parentItem";

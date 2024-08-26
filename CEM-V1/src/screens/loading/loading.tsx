@@ -1,11 +1,8 @@
 import { getPing } from "@/data/serverWrapper";
 import Settings from "@/settings/settings";
-import { AppConfig } from "@/types/config/appConfig";
 import { useEffect, useState } from "react";
 
-export default function Loading(props: {
-  onSettingsChange: (s: AppConfig) => void;
-}) {
+export default function Loading() {
   const [pingResponse, setPingResponse] = useState<Response | null>(null);
 
   useEffect(() => {
@@ -28,7 +25,7 @@ export default function Loading(props: {
       <div className="flex flex-col gap-8 items-center justify-center h-full p-16 overflow-y-scroll">
         <h1>Unable To connect. Check settings</h1>
         <div className="w-full">
-          <Settings onSettingChange={props.onSettingsChange} />
+          <Settings />
         </div>
         <button
           className="w-full btn btn-primary"
