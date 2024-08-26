@@ -1,13 +1,19 @@
-import { PmcDataContext } from "@/contextWrapper/contextWrapper";
 import { arrayToTree } from "performant-array-to-tree";
-import { useContext } from "react";
 import RootItem from "./rootItem";
 import LeafItem from "./leafItem";
 import ParentItem from "./parentItem";
 import { TreeType } from "@/helpers/itemQuery";
+import { useQuery } from "@tanstack/react-query";
+import { getAppConfigQuery, getProfile } from "@/queries";
+import PageSkeleton from "@/dummyComponents/pageSkeleton";
 
 export default function Inventory() {
-  const pmcData = useContext(PmcDataContext);
+  const { data: appConfig } = useQuery(getAppConfigQuery());
+  const { data: profile } = useQuery(
+    getProfile(appConfig?.profile?.name ?? "")
+  );
+
+  if (!profile) return <PageSkeleton />;
 
   const renderInventory = (inventoryList: TreeType[], depth = 1) => {
     const accordionItems = inventoryList.map((item) => {
@@ -35,7 +41,7 @@ export default function Inventory() {
     return accordionItems;
   };
 
-  const itemTree = arrayToTree(pmcData.Inventory.items, {
+  const itemTree = arrayToTree(profile.Inventory.items, {
     id: "_id",
   }) as unknown as TreeType[];
 

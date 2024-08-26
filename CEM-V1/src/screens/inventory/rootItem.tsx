@@ -1,13 +1,16 @@
-import { LocaleDbContext } from "@/contextWrapper/contextWrapper";
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import { TreeType } from "@/helpers/itemQuery";
+import { useQuery } from "@tanstack/react-query";
+import { getLocaleDb } from "@/queries";
 
 export default function RootItem(props: {
   item: TreeType;
   depth: number;
   childRender: (i: TreeType[], d: number) => ReactNode | null;
 }) {
-  const localeDb = useContext(LocaleDbContext);
+  const { data: localeDb } = useQuery(getLocaleDb());
+
+  if (!localeDb) return;
 
   return (
     <div

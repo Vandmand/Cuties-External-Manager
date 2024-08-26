@@ -1,35 +1,29 @@
-import { AppConfigContext } from "@/contextWrapper/contextWrapper";
-import useCache from "@/hooks/useCache";
-import { getPmcIds } from "@/data/apiWrapper";
-import { AppConfig } from "@/types/config/appConfig";
-import { useContext, useEffect, useState } from "react";
+import { getAppConfigMutation, getAppConfigQuery } from "@/queries";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-export default function Settings(props: {
-  onSettingChange: (config: AppConfig) => void;
-}) {
-  const appConfig = useContext(AppConfigContext);
+const themeOptions = [
+  "carbon",
+  "light",
+  "retro",
+  "lemonade",
+  "nord",
+  "black",
+  "luxury",
+  "coffee",
+];
 
-  const [appConfigState, setAppConfigState] = useState<AppConfig>(appConfig);
-  const [allProfiles, setAllProfiles] = useCache<
-    { id: string; name: string }[]
-  >("profileList", []);
+export default function Settings() {
+  const { data: appConfig } = useQuery(getAppConfigQuery());
+  const { mutate: setAppConfig } = useMutation(getAppConfigMutation());
 
-  useEffect(() => {
-    getPmcIds().then((profiles) => setAllProfiles(profiles));
-  }, []);
+  const [appConfigState, setAppConfigState] = useState(appConfig);
+
+  if (!appConfig || !appConfigState) return <p>Loading</p>;
 
   const renderThemeOptions = () => {
     //TODO Fix types to reflect the types defined in appConfig
-    return [
-      "carbon",
-      "light",
-      "retro",
-      "lemonade",
-      "nord",
-      "black",
-      "luxury",
-      "coffee",
-    ].map((type) => (
+    return themeOptions.map((type) => (
       <button
         className="btn btn-ghost"
         key={type}
@@ -38,21 +32,6 @@ export default function Settings(props: {
         }
       >
         {type}
-      </button>
-    ));
-  };
-
-  const renderProfileOptions = () => {
-    return allProfiles.map((profile) => (
-      <button
-        className="btn btn-ghost"
-        onClick={() =>
-          setAppConfigState(
-            Object.assign({}, appConfigState, { profile: profile })
-          )
-        }
-      >
-        {profile.name}
       </button>
     ));
   };
@@ -75,7 +54,6 @@ export default function Settings(props: {
       <input
         className="input input-bordered"
         placeholder="6969"
-        type="number"
         onChange={(val) =>
           setAppConfigState(
             Object.assign({}, appConfigState, { port: val.target.value })
@@ -92,18 +70,9 @@ export default function Settings(props: {
           {renderThemeOptions()}
         </ul>
       </details>
-      <label className="label label-text">Profile:</label>
-      <details className="dropdown">
-        <summary className="btn btn-outline shadow-sm">
-          {appConfigState.profile.name}
-        </summary>
-        <ul className="dropdown-content rounded-md bg-base-100 shadow flex flex-col gap-4 p-4">
-          {renderProfileOptions()}
-        </ul>
-      </details>
       <button
         className="btn-primary btn"
-        onClick={() => props.onSettingChange(appConfigState)}
+        onClick={() => setAppConfig(appConfigState)}
       >
         Save Config
       </button>

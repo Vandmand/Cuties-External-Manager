@@ -4,22 +4,15 @@ import { HttpListenerModService } from "@spt/services/mod/httpListener/HttpListe
 import { QuestHelper } from "@spt/helpers/QuestHelper";
 import { ProfileHelper } from "@spt/helpers/ProfileHelper";
 import { StaticRouterModService } from "@spt/services/mod/staticRouter/StaticRouterModService";
-import { ConfigServer } from "@spt/servers/ConfigServer";
-import { ConfigTypes } from "@spt/models/enums/ConfigTypes";
 import { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
 import { ILogger } from "@spt/models/spt/utils/ILogger";
 import { LocaleService } from "@spt/services/LocaleService";
 import { ItemHelper } from "@spt/helpers/ItemHelper";
-
-import { createInjectionHook } from "./sessionIdInjection";
-import { getQuests } from "./getQuests";
 import { getUrlParameters, registerEndpoint } from "./httpHelper";
 import { RagfairPriceService } from "@spt/services/RagfairPriceService";
 import { DatabaseService } from "@spt/services/DatabaseService";
 
 class Mod implements IPreSptLoadMod {
-  private sessionID: string = "";
-
   public preSptLoad(container: DependencyContainer): void {
     const httpListenerService = container.resolve<HttpListenerModService>(
       "HttpListenerModService"
@@ -30,7 +23,6 @@ class Mod implements IPreSptLoadMod {
     const logger = container.resolve<ILogger>("WinstonLogger");
     const questHelper = container.resolve<QuestHelper>("QuestHelper");
     const profileHelper = container.resolve<ProfileHelper>("ProfileHelper");
-    const configServer = container.resolve<ConfigServer>("ConfigServer");
     const localeService = container.resolve<LocaleService>("LocaleService");
     const itemHelper = container.resolve<ItemHelper>("ItemHelper");
     const databaseService =
@@ -39,14 +31,8 @@ class Mod implements IPreSptLoadMod {
       "RagfairPriceService"
     );
 
-    const questConfig = configServer.getConfig(ConfigTypes.QUEST);
-
-    createInjectionHook(staticRouterModService).then(
-      (sessionId) => (this.sessionID = sessionId)
-    );
-
     registerEndpoint(httpListenerService, "getQuests", "/cem/quests", () => {
-      return getQuests(questHelper, profileHelper, questConfig, this.sessionID);
+      return questHelper.getQuestsFromDb();
     });
 
     registerEndpoint(httpListenerService, "flea", "/cem/flea", () => {
@@ -79,8 +65,6 @@ class Mod implements IPreSptLoadMod {
       () => {
         const profiles = profileHelper.getProfiles();
         const profileIds = [];
-
-        logger.info(Object.keys(profiles).toString());
 
         for (const key in profiles) {
           if (Object.prototype.hasOwnProperty.call(profiles, key)) {

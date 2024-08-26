@@ -1,38 +1,36 @@
 import { AppConfig } from "@/types/config/appConfig";
-import { appConfigDir } from "@tauri-apps/api/path";
+import { appConfigDir, BaseDirectory } from "@tauri-apps/api/path";
 import { fs } from "@tauri-apps/api";
-import { getPmcIds } from "./apiWrapper";
 
 export const getAppConfig = async (): Promise<AppConfig> => {
-  let profiles: AppConfig["profile"][];
-
-  try {
-    profiles = await getPmcIds();
-  } catch (error) {
-    profiles = [{ id: "none", name: "none" }];
-  }
-
   const defaultConfig: AppConfig = {
     ip: "127.0.0.1",
     port: 6969,
-    profile: profiles[0],
+    profile: undefined,
     theme: "default",
   };
 
-  const filePath = (await appConfigDir()) + "appConfig.json";
+  const fileName = "appConfig.json";
 
-  if (await fs.exists(filePath)) {
+  if (await fs.exists(fileName, { dir: BaseDirectory.AppConfig })) {
     // Added in development to fix missing config fields from previous config versions
     const config = Object.assign(
       {},
       defaultConfig,
-      JSON.parse(await fs.readTextFile(filePath))
+      JSON.parse(
+        await fs.readTextFile(fileName, { dir: BaseDirectory.AppConfig })
+      )
     );
 
     return config;
   }
 
-  fs.writeFile(filePath, JSON.stringify(defaultConfig));
+  fs.createDir("", { dir: BaseDirectory.AppConfig });
+
+  fs.writeFile(fileName, JSON.stringify(defaultConfig), {
+    dir: BaseDirectory.AppConfig,
+  });
+
   return defaultConfig;
 };
 

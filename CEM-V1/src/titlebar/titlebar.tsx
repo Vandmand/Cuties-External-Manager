@@ -19,11 +19,11 @@ export default function TitleBar() {
       </div>
       <button
         onClick={() => appWindow.minimize()}
-        className="w-4 h-4 bg-yellow-500 rounded-full"
+        className="w-4 h-4 bg-green-600 rounded-full"
       />
       <button
         onClick={() => appWindow.maximize()}
-        className="w-4 h-4 bg-green-600 rounded-full"
+        className="w-4 h-4 bg-yellow-500 rounded-full"
       />
       <button
         onClick={() => {

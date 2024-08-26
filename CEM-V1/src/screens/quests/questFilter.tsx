@@ -1,11 +1,8 @@
-import {
-  LocaleDbContext,
-  PmcDataContext,
-} from "@/contextWrapper/contextWrapper";
-import { IPmcData } from "@/types/models/eft/common/IPmcData";
 import { IQuest } from "@/types/models/eft/common/tables/IQuest";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import QuestFilterDropdown from "./questFilterDropdown";
+import { useQuery } from "@tanstack/react-query";
+import { getAppConfigQuery, getLocaleDb, getProfile } from "@/queries";
 
 enum QuestStatus {
   Locked = 0,
@@ -20,25 +17,6 @@ enum QuestStatus {
   AvailableAfter = 9,
 }
 
-const getTraderIds = (pmcData: IPmcData) => {
-  return Object.keys(pmcData.TradersInfo);
-};
-
-const questDefaultState = Object.fromEntries(
-  Object.values(QuestStatus)
-    .slice(0, Object.values(QuestStatus).length / 2)
-    .map((status) => [status, false])
-);
-
-const getTraderDefaultState = (
-  pmcData: IPmcData,
-  localeDb: Record<string, string>
-) => {
-  return Object.fromEntries(
-    getTraderIds(pmcData).map((key) => [localeDb[`${key} Nickname`], false])
-  );
-};
-
 function isAllFiltersUnchecked(record: Record<string, boolean>) {
   return Object.entries(record).filter((entry) => entry[1]).length == 0;
 }
@@ -46,22 +24,34 @@ function isAllFiltersUnchecked(record: Record<string, boolean>) {
 export default function QuestFilter(props: {
   onFilterFunctionChange: (func: (q: IQuest[]) => IQuest[]) => void;
 }) {
-  const pmcData = useContext(PmcDataContext);
-  const localeDb = useContext(LocaleDbContext);
-  const pmcQuests = pmcData.Quests;
+  const { data: appConfig } = useQuery(getAppConfigQuery());
+  const { data: profileData } = useQuery(
+    getProfile(appConfig?.profile?.id ?? "")
+  );
+  const { data: localeDb } = useQuery(getLocaleDb());
+
+  const traderIds = Object.keys(profileData?.TradersInfo ?? {});
+
+  const questDefaultState = Object.fromEntries(
+    Object.values(QuestStatus)
+      .slice(0, Object.values(QuestStatus).length / 2)
+      .map((status) => [status, false])
+  );
+
+  const filterDefaultState = Object.fromEntries(
+    traderIds.map((id) => [localeDb ? localeDb[id + " Nickname"] : "", false])
+  );
 
   const [filterStatus, setFilterStatus] =
     useState<Record<string, boolean>>(questDefaultState);
 
-  const [filterTrader, setFilterTrader] = useState(
-    getTraderDefaultState(pmcData, localeDb)
-  );
+  const [filterTrader, setFilterTrader] = useState(filterDefaultState);
 
   const traderFilter = (q: IQuest[]) => {
     if (isAllFiltersUnchecked(filterTrader)) return q;
 
-    const traders = getTraderIds(pmcData).filter(
-      (trader) => filterTrader[localeDb[`${trader} Nickname`]]
+    const traders = traderIds.filter(
+      (trader) => filterTrader[localeDb ? localeDb[`${trader} Nickname`] : ""]
     );
 
     return q.filter((q) => traders.indexOf(q.traderId) != -1);
@@ -101,6 +91,10 @@ export default function QuestFilter(props: {
       return qMod;
     });
   }, [filterStatus, filterTrader]);
+
+  if (!profileData || !localeDb) return <p>Filter</p>;
+
+  const pmcQuests = profileData.Quests;
 
   return (
     <div className="flex gap-4 flex-wrap justify-center items-center">

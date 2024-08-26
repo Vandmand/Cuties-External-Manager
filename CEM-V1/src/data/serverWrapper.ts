@@ -1,3 +1,4 @@
+import { AppConfig } from "@/types/config/appConfig";
 import { IPmcData } from "@/types/models/eft/common/IPmcData";
 import { IQuest } from "@/types/models/eft/common/tables/IQuest";
 import { ITemplateItem } from "@/types/models/eft/common/tables/ITemplateItem";
@@ -23,7 +24,10 @@ export function isError(response: any) {
   return response.Error;
 }
 
-async function fetchEndpoint(endpoint: string, ...params: [string, string][]) {
+export async function fetchEndpoint<T>(
+  endpoint: string,
+  ...params: [string, string][]
+): Promise<T> {
   const urlParams =
     "?" + params.map((param) => param[0] + "=" + param[1]).join();
 
@@ -32,33 +36,27 @@ async function fetchEndpoint(endpoint: string, ...params: [string, string][]) {
   return response.json();
 }
 
-export const fetchQuests = async (): Promise<IQuest[]> =>
-  fetchEndpoint("/cem/quests", ["test", "test1"]);
+export const fetchQuests = async () =>
+  fetchEndpoint<IQuest[]>("/cem/quests", ["test", "test1"]);
 
-export const fetchLocaleDb = async (): Promise<Record<string, string>> =>
-  fetchEndpoint("/cem/localeDb");
+export const fetchLocaleDb = async () =>
+  fetchEndpoint<Record<string, string>>("/cem/localeDb");
 
-export const fetchPmcIds = async (): Promise<[{ id: string; name: string }]> =>
-  fetchEndpoint("/cem/profile/ids");
+export const fetchPmcIds = async () =>
+  fetchEndpoint<AppConfig["profile"][]>("/cem/profile/ids");
 
-export const fetchProfile = (id: string): Promise<IPmcData> =>
-  fetchEndpoint("/cem/profile", ["id", id]);
+export const fetchProfile = (id: string) =>
+  fetchEndpoint<IPmcData>("/cem/profile", ["id", id]);
 
-export async function getFleaPrices(): Promise<Record<string, string>> {
-  return (await fetch(getEndpoint() + "/cem/flea")).json();
-}
+export const fetchFleaPrices = async () =>
+  fetchEndpoint<Record<string, string>>("/cem/flea");
 
-export async function getItems(): Promise<string[]> {
-  return (await fetch(getEndpoint() + "/cem/items")).json();
-}
+export const fetchItems = async () => fetchEndpoint<string[]>("/cem/items");
 
-export async function getItem(id: string): Promise<ITemplateItem> {
-  return (await fetch(getEndpoint() + "/cem/item?id=" + id)).json();
-}
+export const fetchItem = async (id: string) =>
+  fetchEndpoint<ITemplateItem>("/cem/item", ["id", id]);
 
-export async function getHideout(): Promise<IHideout> {
-  return (await fetch(getEndpoint() + "/cem/hideout")).json();
-}
+export const fetchHideout = async () => fetchEndpoint<IHideout>("/cem/hideout");
 
 export async function getPing(): Promise<Response> {
   try {

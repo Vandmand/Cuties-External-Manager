@@ -1,30 +1,20 @@
-import {
-  FleaMarketContext,
-  LocaleDbContext,
-} from "@/contextWrapper/contextWrapper";
 import Card from "@/dummyComponents/card";
-import { getItem } from "@/data/serverWrapper";
-import {
-  ITemplateItem,
-  Props,
-} from "@/types/models/eft/common/tables/ITemplateItem";
-import { useContext, useEffect, useState } from "react";
+import { Props } from "@/types/models/eft/common/tables/ITemplateItem";
 import { useParams } from "react-router-dom";
 import { convertToWikiLink } from "@/helpers/links";
+import { useQuery } from "@tanstack/react-query";
+import { getFleaPrices, getItem, getLocaleDb } from "@/queries";
+import PageSkeleton from "@/dummyComponents/pageSkeleton";
 
 export default function Item() {
-  const localeDb = useContext(LocaleDbContext);
   const { itemId } = useParams();
-  const fleaMarket = useContext(FleaMarketContext);
 
-  const [itemData, setItemData] = useState<ITemplateItem>({} as ITemplateItem);
+  const { data: localeDb } = useQuery(getLocaleDb());
+  const { data: fleaMarket } = useQuery(getFleaPrices());
+  const { data: itemData } = useQuery(getItem(itemId ?? ""));
 
-  useEffect(() => {
-    getItem(itemId ?? "").then((itemData) => setItemData(itemData ?? {}));
-  }, []);
-
-  if (Object.keys(itemData).length === 0) {
-    return <p>Dummy Loading</p>;
+  if (!itemData || !fleaMarket || !localeDb) {
+    return <PageSkeleton />;
   }
 
   const renderProps = () => {
