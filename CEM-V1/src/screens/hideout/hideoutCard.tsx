@@ -1,18 +1,18 @@
-import {
-  LocaleDbContext,
-  PmcDataContext,
-} from "@/contextWrapper/contextWrapper";
 import { itemList } from "@/helpers/itemQuery";
+import { getAppConfigQuery, getLocaleDb, getProfile } from "@/queries";
 import { HideoutArea } from "@/types/models/eft/common/tables/IBotBase";
 import { IHideoutArea } from "@/types/models/eft/hideout/IHideoutArea";
-import { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function HideoutCard(props: { area: IHideoutArea }) {
-  const localeDb = useContext(LocaleDbContext);
-  const pmcData = useContext(PmcDataContext);
+  const { data: localeDb } = useQuery(getLocaleDb());
+  const { data: appConfig } = useQuery(getAppConfigQuery());
+  const { data: profile } = useQuery(getProfile(appConfig?.profile?.id ?? ""));
+
+  if (!localeDb || !profile) return;
 
   const name = localeDb[`hideout_area_${props.area.type}_name`];
-  const pmcHideoutArea = pmcData.Hideout.Areas.find(
+  const pmcHideoutArea = profile.Hideout.Areas.find(
     (pmcArea) => pmcArea.type == props.area.type
   ) as HideoutArea;
 
@@ -25,7 +25,7 @@ export default function HideoutCard(props: { area: IHideoutArea }) {
       if (req.type !== "Item") return null;
 
       const itemMatch =
-        itemList(pmcData.Inventory.items)[req.templateId ?? ""] ?? 0;
+        itemList(profile.Inventory.items)[req.templateId ?? ""] ?? 0;
 
       const itemName = localeDb[(req.templateId as string) + " Name"];
 

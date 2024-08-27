@@ -1,19 +1,22 @@
-import { getItems } from "@/data/serverWrapper";
-import { useContext, useEffect } from "react";
-import { LocaleDbContext } from "@/contextWrapper/contextWrapper";
 import { Link, useParams } from "react-router-dom";
-import useCache from "@/hooks/useCache";
+import { useQuery } from "@tanstack/react-query";
+import { getItems, getLocaleDb } from "@/queries";
+import PageSkeleton from "@/dummyComponents/pageSkeleton";
 
-function ItemLink(props: { itemId: string; localeDb: Record<string, string> }) {
+function ItemLink(props: { itemId: string }) {
+  const { data: localeDb } = useQuery(getLocaleDb());
+
+  if (!localeDb) return <p>link</p>;
+
   return (
     <Link
       to={"../item/" + props.itemId}
       key={props.itemId}
       className="my-8 py-6 px-8 shadow-sm flex items-center rounded-lg bg-base-100 "
     >
-      <h5 className="flex-grow">{props.localeDb[props.itemId + " Name"]}</h5>
+      <h5 className="flex-grow">{localeDb[props.itemId + " Name"]}</h5>
       <h6 className="italic">
-        {"(" + props.localeDb[props.itemId + " ShortName"] + ")"}
+        {"(" + localeDb[props.itemId + " ShortName"] + ")"}
       </h6>
     </Link>
   );
@@ -24,30 +27,25 @@ export default function Items() {
   const page = p ? parseInt(p) : 1;
   const itemsPrPage = 50;
 
-  const localeDb = useContext(LocaleDbContext);
-  const [items, setItems] = useCache<string[]>("items", []);
+  const { data: items } = useQuery(getItems());
 
   //TODO fix this
+  //TODO Still need to fix this bug
   window.scrollTo(0, 0);
 
-  useEffect(() => {
-    getItems().then((items) => setItems(items));
-  }, []);
+  if (!items) {
+    return <PageSkeleton />;
+  }
 
   const renderItems = () => {
     const newItems = items
       .slice(itemsPrPage * (page - 1), itemsPrPage * page)
       .map((itemId) => {
-        return <ItemLink itemId={itemId} localeDb={localeDb} />;
+        return <ItemLink itemId={itemId} />;
       });
 
     return newItems;
   };
-
-  if (items.length == 0) {
-    console.log(items);
-    return <p>Dummy Loading</p>;
-  }
 
   return (
     <div className="px-4 flex flex-col items-center gap-8">

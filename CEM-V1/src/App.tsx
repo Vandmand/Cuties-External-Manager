@@ -1,5 +1,4 @@
 import "./App.css";
-import { useEffect } from "react";
 import TitleBar from "./titlebar/titlebar";
 import {
   createBrowserRouter,
@@ -9,38 +8,27 @@ import {
 import Main from "./screens/main/main";
 import Quests from "./screens/quests/quests";
 import Hideout from "./screens/hideout/hideout";
-import { AppConfig } from "./types/config/appConfig";
 import Settings from "./settings/settings";
 import { Theme } from "react-daisyui";
-import FleaMarket from "./screens/fleaMarket/fleaMarket";
 import Item from "./screens/items/item";
 import Items from "./screens/items/items";
-import { getAppConfig, saveAppConfig } from "./data/config";
-import useCache from "./hooks/useCache";
 import Inventory from "./screens/inventory/inventory";
+import { useQuery } from "@tanstack/react-query";
+import { getAppConfigQuery } from "./queries";
+import { setIp, setPort } from "./data/serverWrapper";
 
 function App() {
-  const [appConfig, setAppConfig] = useCache("appConfig", {} as AppConfig);
+  const { data: appConfig } = useQuery(getAppConfigQuery());
 
-  useEffect(() => {
-    getAppConfig().then((config) => setAppConfig(config));
-  }, []);
-
-  const handleSettingChange = async (settings: AppConfig) => {
-    await saveAppConfig(settings);
-    setAppConfig(settings);
-    window.location.reload();
-  };
+  if (appConfig) {
+    setIp(appConfig.ip);
+    setPort(appConfig.port);
+  }
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <Main
-          appConfig={appConfig}
-          onSettingChange={(s) => handleSettingChange(s)}
-        />
-      ),
+      element: <Main />,
       children: [
         {
           path: "quests",
@@ -52,15 +40,7 @@ function App() {
         },
         {
           path: "settings",
-          element: (
-            <Settings
-              onSettingChange={(settings) => handleSettingChange(settings)}
-            />
-          ),
-        },
-        {
-          path: "flea",
-          element: <FleaMarket />,
+          element: <Settings />,
         },
         {
           path: "inventory",
@@ -84,17 +64,17 @@ function App() {
       path: "*",
       element: <Navigate to={"../"} />,
     },
+    {
+      path: "settings",
+      element: <Settings />,
+    },
   ]);
 
   return (
-    <Theme dataTheme={appConfig.theme}>
+    <Theme dataTheme={appConfig?.theme ?? "carbon"}>
       <div className="p-2 flex flex-col gap-2 border-4 border-base-300 bg-base-200 shadow-inner h-screen overflow-hidden">
         <TitleBar />
-        {Object.keys(appConfig).length === 0 ? (
-          <></>
-        ) : (
-          <RouterProvider router={router} />
-        )}
+        <RouterProvider router={router} />
       </div>
     </Theme>
   );

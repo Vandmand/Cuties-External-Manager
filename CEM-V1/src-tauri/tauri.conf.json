@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "ccp-v1",
+    "productName": "cem-v1",
     "version": "0.0.0"
   },
   "tauri": {
@@ -15,7 +15,8 @@
       "fs": {
         "all": true,
         "scope": [
-          "$APP/*"
+          "$APPCONFIG/*",
+          "$APPCONFIG"
         ],
         "writeFile": false
       },
@@ -27,7 +28,7 @@
     "windows": [
       {
         "decorations": false,
-        "title": "ccp-v1",
+        "title": "Cuties External Manager",
         "width": 800,
         "height": 600
       }

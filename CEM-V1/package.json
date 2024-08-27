@@ -10,13 +10,15 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.52.1",
     "@tauri-apps/api": "^1",
     "performant-array-to-tree": "^1.11.0",
     "react": "^18.2.0",
     "react-daisyui": "^5.0.3",
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",
-    "react-router-dom": "^6.24.1"
+    "react-router-dom": "^6.24.1",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1",
