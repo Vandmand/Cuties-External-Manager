@@ -15,9 +15,15 @@ import Items from "./screens/items/items";
 import Inventory from "./screens/inventory/inventory";
 import { useQuery } from "@tanstack/react-query";
 import { getAppConfigQuery } from "./queries";
+import { setIp, setPort } from "./data/serverWrapper";
 
 function App() {
   const { data: appConfig } = useQuery(getAppConfigQuery());
+
+  if (appConfig) {
+    setIp(appConfig.ip);
+    setPort(appConfig.port);
+  }
 
   const router = createBrowserRouter([
     {
