@@ -57,7 +57,7 @@ export default function QuestCard(props: QuestItemInterface) {
         ) : null;
 
         return (
-          <div className=" flex flex-col">
+          <div className="flex flex-col">
             <div className="flex items-center">
               <p className="flex flex-grow items-center gap-2">
                 {localeDb[condition.id]}

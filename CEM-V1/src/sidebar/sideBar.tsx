@@ -1,4 +1,3 @@
-import Spacer from "@/dummyComponents/spacer";
 import { Link } from "react-router-dom";
 import questIcon from "@/assets/icons/quest_icon.svg";
 import itemIcon from "@/assets/icons/item_icon.svg";
@@ -11,11 +10,60 @@ import {
   getAppConfigQuery,
   getProfileIds,
 } from "@/queries";
+import useHref from "@/hooks/useHref";
 
 export default function SideBar() {
   const { data: profileIds } = useQuery(getProfileIds());
   const { data: appConfig } = useQuery(getAppConfigQuery());
   const { mutate: setAppConfig } = useMutation(getAppConfigMutation());
+  const href = useHref();
+
+  const renderRouteTabs = () => {
+    const routes = [
+      {
+        name: "Quests",
+        icon: questIcon,
+        to: "quests",
+      },
+      {
+        name: "Hideout",
+        icon: hideoutIcon,
+        to: "hideout",
+      },
+      {
+        name: "Inventory",
+        icon: inventoryIcon,
+        to: "inventory",
+      },
+      {
+        name: "Items",
+        icon: itemIcon,
+        to: "items",
+      },
+      {
+        name: "Settings",
+        icon: settingIcons,
+        to: "settings",
+      },
+    ];
+
+    return routes.map((route) => {
+      const current = href.split("/")[1] === route.name.toLowerCase();
+
+      return (
+        <Link
+          key={route.name}
+          className={`btn ${
+            current ? "btn-primary" : "btn-ghost"
+          } w-full flex items-center gap-2`}
+          to={route.to}
+        >
+          <img src={route.icon} alt="" />{" "}
+          <p className="flex-grow text-left">{route.name}</p>
+        </Link>
+      );
+    });
+  };
 
   const renderProfileIds = () => {
     return profileIds?.map((profile) => (
@@ -31,53 +79,28 @@ export default function SideBar() {
   };
 
   return (
-    <div className="flex flex-col border-2 border-base-300 rounded-lg p-2 items-center gap-8 shadow-sm min-w-fit">
-      <div className="">tabs</div>
-      <div className="flex flex-col gap-4 items-center justify-center flex-1">
-        <Link
-          className="btn shadow-none w-full flex items-center gap-2"
-          to={"quests"}
-        >
-          <img src={questIcon} alt="" />{" "}
-          <p className="flex-grow text-left">Quests</p>
-        </Link>
-        <Spacer.Horizontal />
-        <Link
-          className="btn shadow-none w-full flex items-center gap-2"
-          to={"hideout"}
-        >
-          <img src={hideoutIcon} alt="" />{" "}
-          <p className="flex-grow text-left">Hideout</p>
-        </Link>
-        <Spacer.Horizontal />
-        <Link className="btn shadow-none w-full flex items-center" to={"items"}>
-          <img src={itemIcon} alt="" />{" "}
-          <p className="flex-grow text-left">Items</p>
-        </Link>
-        <Spacer.Horizontal />
-        <Link
-          className="btn shadow-none w-full flex items-center"
-          to={"inventory"}
-        >
-          <img src={inventoryIcon} alt="" />{" "}
-          <p className="flex-grow text-left">Inventory</p>
-        </Link>
-        <Spacer.Horizontal />
-        <Link
-          className="btn shadow-none w-full flex items-center"
-          to={"settings"}
-        >
-          <img src={settingIcons} alt="Settings" />
-          <p className="flex-grow text-left">Settings</p>
-        </Link>
+    <div className="flex flex-col rounded-lg p-2 items-center gap-8 shadow bg-neutral text-base-100">
+      <button className="input text-base-content flex items-center gap-4">
+        Search
+        <div className="flex gap-1">
+          <div className="kbd kbd-sm">ctrl</div>+
+          <div className="kbd kbd-sm">k</div>
+        </div>
+      </button>
+      <div className="flex flex-col gap-4 items-center justify-center flex-1 w-full">
+        {renderRouteTabs()}
       </div>
       <div className="flex items-center gap-2 w-full">
         <div className="dropdown dropdown-top w-full">
-          <button className="btn btn-outline w-full ">
-            <p className="flex-grow">{appConfig?.profile?.name ?? "Profile"}</p>
-            <div className="rounded-full h-3 w-3 bg-green-500"></div>
+          <button className="btn w-full ">
+            <p className="flex-grow text-left">
+              {appConfig?.profile?.name ?? "Profile"}
+            </p>
+            <div className="rounded-full h-3 w-3 bg-green-500 shadow" />
           </button>
-          <div className="dropdown-content">{renderProfileIds()}</div>
+          <div className="menu dropdown-content w-full gap-2 ">
+            {renderProfileIds()}
+          </div>
         </div>
       </div>
     </div>
