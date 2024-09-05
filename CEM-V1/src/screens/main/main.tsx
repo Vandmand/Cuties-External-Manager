@@ -12,7 +12,7 @@ export default function Main() {
   return (
     <div className="flex gap-4 flex-1 overflow-auto">
       <SideBar />
-      <div className="relative overflow-auto flex-grow rounded-lg border-base-300 border-2 p-2 shadow-sm">
+      <div className="relative overflow-auto flex-grow ">
         <Outlet />
       </div>
     </div>

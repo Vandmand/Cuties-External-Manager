@@ -50,12 +50,13 @@ export default function Items() {
   return (
     <div className="px-4 flex flex-col items-center gap-8">
       <div className="w-4/5">{renderItems()}</div>
-      <div className="flex gap-4">
-        <Link className="btn btn-primary" to={"../items/" + (page - 1)}>
-          Previous Page
+      <div className="join">
+        <Link className="btn join-item" to={"../items/" + (page - 1)}>
+          «
         </Link>
-        <Link className="btn btn-primary" to={"../items/" + (page + 1)}>
-          Next page
+        <button className="join-item btn">Page 22</button>
+        <Link className="btn  join-item" to={"../items/" + (page + 1)}>
+          »
         </Link>
       </div>
     </div>
