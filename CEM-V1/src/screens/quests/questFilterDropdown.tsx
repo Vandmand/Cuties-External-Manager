@@ -11,7 +11,7 @@ export default function QuestFilterDropdown(props: {
         const filter = props.filterObject[key];
 
         renderedOptions.push(
-          <li className="flex gap-4 flex-row" id={key}>
+          <li className="flex gap-4 flex-row" key={key}>
             <input
               className="checkbox"
               type="checkbox"

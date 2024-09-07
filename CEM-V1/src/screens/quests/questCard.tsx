@@ -79,7 +79,7 @@ export default function QuestCard(props: QuestItemInterface) {
     );
 
     return questFinishConditions.map((text, i) => (
-      <p id={i.toString()}>{text}</p>
+      <div key={i.toString()}>{text}</div>
     ));
   };
 

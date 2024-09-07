@@ -9,11 +9,9 @@ import PageSkeleton from "@/dummyComponents/pageSkeleton";
 
 export default function Inventory() {
   const { data: appConfig } = useQuery(getAppConfigQuery());
-  const { data: profile } = useQuery(
-    getProfile(appConfig?.profile?.name ?? "")
-  );
+  const { data: profile } = useQuery(getProfile(appConfig?.profile?.id ?? ""));
 
-  if (!profile) return <PageSkeleton />;
+  if (!appConfig || !profile) return <PageSkeleton />;
 
   const renderInventory = (inventoryList: TreeType[], depth = 1) => {
     const accordionItems = inventoryList.map((item) => {

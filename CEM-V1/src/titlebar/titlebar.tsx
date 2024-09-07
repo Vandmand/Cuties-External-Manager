@@ -11,7 +11,7 @@ export default function TitleBar() {
   };
 
   return (
-    <div className="w-full bg-neutral rounded-lg shadow p-2 flex items-center">
+    <div className="w-full bg-neutral rounded-lg shadow px-2 flex items-center">
       <div
         className="flex-1 h-full min-w-0 flex gap-4 justify-center"
         onMouseDown={() => appWindow.startDragging()}

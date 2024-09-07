@@ -58,12 +58,6 @@ export const fetchItem = async (id: string) =>
 
 export const fetchHideout = async () => fetchEndpoint<IHideout>("/cem/hideout");
 
-export async function getPing(): Promise<Response> {
-  try {
-    return await fetch(getEndpoint() + "/cem/ping", {
-      signal: AbortSignal.timeout(10000),
-    });
-  } catch (error) {
-    return new Response(null, { status: 404 });
-  }
+export async function fetchPing(): Promise<Response> {
+  return fetch(getEndpoint() + "/cem/ping");
 }

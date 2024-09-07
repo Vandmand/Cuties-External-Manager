@@ -11,7 +11,7 @@ export default function Hideout() {
 
   const renderHideout = (hideout: IHideout) => {
     return hideout.areas.map((area) => {
-      return <HideoutCard area={area} />;
+      return <HideoutCard area={area} key={area._id} />;
     });
   };
 

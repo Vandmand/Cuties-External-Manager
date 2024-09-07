@@ -1,7 +1,9 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getItems, getLocaleDb } from "@/queries";
 import PageSkeleton from "@/dummyComponents/pageSkeleton";
+import { useContext, useState } from "react";
+import { scrollContext } from "../main/main";
 
 function ItemLink(props: { itemId: string }) {
   const { data: localeDb } = useQuery(getLocaleDb());
@@ -23,25 +25,26 @@ function ItemLink(props: { itemId: string }) {
 }
 
 export default function Items() {
-  const { p } = useParams();
-  const page = p ? parseInt(p) : 1;
-  const itemsPrPage = 50;
+  const [page, setPage] = useState(1);
+  const scrollTop = useContext(scrollContext);
+  const ITEMS_PR_PAGE = 50;
 
   const { data: items } = useQuery(getItems());
-
-  //TODO fix this
-  //TODO Still need to fix this bug
-  window.scrollTo(0, 0);
 
   if (!items) {
     return <PageSkeleton />;
   }
 
+  const changePage = (n: number) => {
+    setPage(n);
+    scrollTop(0);
+  };
+
   const renderItems = () => {
     const newItems = items
-      .slice(itemsPrPage * (page - 1), itemsPrPage * page)
+      .slice(ITEMS_PR_PAGE * (page - 1), ITEMS_PR_PAGE * page)
       .map((itemId) => {
-        return <ItemLink itemId={itemId} />;
+        return <ItemLink itemId={itemId} key={itemId} />;
       });
 
     return newItems;
@@ -51,13 +54,13 @@ export default function Items() {
     <div className="px-4 flex flex-col items-center gap-8">
       <div className="w-4/5">{renderItems()}</div>
       <div className="join">
-        <Link className="btn join-item" to={"../items/" + (page - 1)}>
+        <button className="btn join-item" onClick={() => changePage(page - 1)}>
           «
-        </Link>
-        <button className="join-item btn">Page 22</button>
-        <Link className="btn  join-item" to={"../items/" + (page + 1)}>
+        </button>
+        <button className="join-item btn">Page {page}</button>
+        <button className="btn  join-item" onClick={() => changePage(page + 1)}>
           »
-        </Link>
+        </button>
       </div>
     </div>
   );

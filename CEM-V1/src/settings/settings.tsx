@@ -9,7 +9,6 @@ const themeOptions = [
   "lemonade",
   "nord",
   "black",
-  "luxury",
   "coffee",
 ];
 

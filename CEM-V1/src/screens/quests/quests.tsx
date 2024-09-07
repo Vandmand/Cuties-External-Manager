@@ -19,7 +19,7 @@ export default function Quests() {
     const questsQuery = questFilter(quests);
 
     return questsQuery.map((quest) => (
-      <QuestCard quest={quest} id={quest._id} />
+      <QuestCard quest={quest} key={quest._id} />
     ));
   };
 

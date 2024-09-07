@@ -31,7 +31,6 @@ export default {
       "lemonade",
       "nord",
       "black",
-      "luxury",
       "coffee"
     ],
     darkTheme: "black"

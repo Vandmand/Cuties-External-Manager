@@ -1,4 +1,8 @@
-import { QueryClient, UseMutationOptions } from "@tanstack/react-query";
+import {
+  QueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 import { getAppConfig, saveAppConfig } from "./data/config";
 import * as server from "@/data/serverWrapper";
 import { AppConfig } from "./types/config/appConfig";
