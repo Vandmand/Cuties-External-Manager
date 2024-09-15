@@ -25,8 +25,6 @@ export const getAppConfig = async (): Promise<AppConfig> => {
     return config;
   }
 
-  fs.createDir("", { dir: BaseDirectory.AppConfig });
-
   fs.writeFile(fileName, JSON.stringify(defaultConfig), {
     dir: BaseDirectory.AppConfig,
   });
