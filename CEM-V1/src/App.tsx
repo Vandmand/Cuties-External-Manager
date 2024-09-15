@@ -16,9 +16,24 @@ import Inventory from "./screens/inventory/inventory";
 import { useQuery } from "@tanstack/react-query";
 import { getAppConfigQuery } from "./queries";
 import { setIp, setPort } from "./data/serverWrapper";
+import { useEffect } from "react";
+import { fs } from "@tauri-apps/api";
+import { BaseDirectory } from "@tauri-apps/api/fs";
+
+const checkFileSystems = () => {
+  if (!fs.exists("", { dir: BaseDirectory.AppData }))
+    fs.createDir("", { dir: BaseDirectory.AppData });
+
+  if (!fs.exists("", { dir: BaseDirectory.AppConfig }))
+    fs.createDir("", { dir: BaseDirectory.AppConfig });
+};
 
 function App() {
   const { data: appConfig } = useQuery(getAppConfigQuery());
+
+  useEffect(() => {
+    checkFileSystems();
+  }, []);
 
   if (appConfig) {
     setIp(appConfig.ip);

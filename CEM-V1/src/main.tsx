@@ -1,13 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./queries";
+import { asyncStoragePersister, queryClient } from "./queries";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      persistOptions={{ persister: asyncStoragePersister }}
+      client={queryClient}
+    >
       <App />
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   </React.StrictMode>
 );

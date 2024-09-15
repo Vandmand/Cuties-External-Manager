@@ -16,7 +16,9 @@
         "all": true,
         "scope": [
           "$APPCONFIG/*",
-          "$APPCONFIG"
+          "$APPCONFIG",
+          "$APPDATA/*",
+          "$APPDATA"
         ],
         "writeFile": false
       },
