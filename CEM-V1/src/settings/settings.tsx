@@ -1,4 +1,8 @@
-import { getAppConfigMutation, getAppConfigQuery } from "@/queries";
+import {
+  getAppConfigMutation,
+  getAppConfigQuery,
+  queryClient,
+} from "@/queries";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -74,6 +78,12 @@ export default function Settings() {
         onClick={() => setAppConfig(appConfigState)}
       >
         Save Config
+      </button>
+      <button
+        className="btn btn-primary"
+        onClick={() => queryClient.invalidateQueries()}
+      >
+        Delete Cache
       </button>
     </div>
   );

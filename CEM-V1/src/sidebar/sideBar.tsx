@@ -14,6 +14,7 @@ import useHref from "@/hooks/useHref";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Indicator from "./indicator";
+import Modal from "./modal";
 
 export default function SideBar() {
   const { data: profileIds } = useQuery(getProfileIds());
@@ -108,32 +109,10 @@ export default function SideBar() {
       >
         Search
         <div className="flex gap-1">
-          <div className="kbd kbd-sm">ctrl</div>+
-          <div className="kbd kbd-sm">k</div>
+          <div className="kbd kbd-sm">ctrl + k</div>
         </div>
       </button>
-      <div
-        hidden={modalState}
-        className="left-0 top-0 w-screen h-screen backdrop-blur z-50 fixed"
-      >
-        <div className="flex items-center justify-center h-full w-full">
-          <div className="modal-box w-4/5 h-3/5">
-            <div className="flex items-center gap-4">
-              <input
-                type="text"
-                className="input flex-grow input-primary"
-                placeholder="Search anything"
-              />
-              <button
-                className="btn btn-circle"
-                onClick={() => setModalState(true)}
-              >
-                X
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Modal modalState={modalState} setModalState={setModalState} />
       <div className="flex flex-col gap-4 items-center justify-center flex-1 w-full">
         {renderRouteTabs()}
       </div>
