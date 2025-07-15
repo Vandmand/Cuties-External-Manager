@@ -10,7 +10,7 @@ const config = {
 };
 
 const getEndpoint = (): string => {
-  return `http://${config.ip}:${config.port}`;
+  return `https://${config.ip}:${config.port}`;
 };
 
 export function setIp(ip: string) {

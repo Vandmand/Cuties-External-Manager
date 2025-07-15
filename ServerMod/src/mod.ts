@@ -31,6 +31,10 @@ class Mod implements IPreSptLoadMod {
       "RagfairPriceService"
     );
 
+    registerEndpoint(httpListenerService, "ping", "/cem/ping", () => {
+      return "pong";
+    });
+
     registerEndpoint(httpListenerService, "getQuests", "/cem/quests", () => {
       return questHelper.getQuestsFromDb();
     });
